@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Maps</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string-array name="type">
+        <item>Plot No</item>
+        <item>Status</item>
+    </string-array>
+    <string-array name="fruits">
+        <item>Available</item>
+        <item>Sold</item>
+        <item>Booked</item>
+    </string-array>
+    <string-array name="colours">
+        <item>Select-Facing</item>
+        <item>North</item>
+        <item>South</item>
+        <item>East</item>
+        <item>West</item>
+        <item>North-East</item>
+        <item>South-East</item>
+        <item>North-West</item>
+        <item>South-West</item>
+    </string-array>
+</resources>
