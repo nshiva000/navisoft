@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    public static final String BASE_URL = "http://navisoftech.in/jp/";
+    public static final String BASE_URL = "http://navisoftech.in/swagath/api/";
     private static  RetrofitClient mInstance;
     private Retrofit retrofit;
 

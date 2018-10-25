@@ -72,7 +72,7 @@ import retrofit2.Response;
 
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,EasyPermissions.PermissionCallbacks {
 
     private DataHelper db;
     private GoogleMap mMap;
@@ -159,7 +159,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                // openCamera();
-                snapShot();
+                openCamera();
             }
         });
 
@@ -881,7 +881,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 }catch (Exception e){
                     e.printStackTrace ();
-                    Toast.makeText (MapsActivity.this, "Not Capture", Toast.LENGTH_SHORT).show ();
+                    Toast.makeText (MapsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show ();
                 }
 
 
@@ -898,6 +898,54 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+
+        }
+    }
+
+
+
+
+    @AfterPermissionGranted(123)
+    private void openCamera() {
+        String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+
+            snapShot();
+
+        } else {
+            EasyPermissions.requestPermissions(this, "We need permissions because this and that",
+                    123, perms);
+        }
+    }
+
 
 
 
