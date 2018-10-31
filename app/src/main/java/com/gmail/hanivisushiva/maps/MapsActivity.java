@@ -22,15 +22,20 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -40,6 +45,7 @@ import android.widget.Toast;
 import com.gmail.hanivisushiva.maps.Models.Data;
 import com.gmail.hanivisushiva.maps.Models.DatabaseModel;
 import com.gmail.hanivisushiva.maps.Models.Datum;
+import com.gmail.hanivisushiva.maps.Storage.SharedPrefManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -118,10 +124,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     ArrayList<String> plot_id = new ArrayList<>();
     HashMap<String,LatLng> center_hash = new HashMap<>();
-    LatLng a;
+    LatLng center_x;
     private TextView textView;
     View main;
     ImageView imageView;
+    String pid,cid;
+
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
 
     @Override
@@ -130,9 +143,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
 
 
+
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+
+
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayShowHomeEnabled(true);
+
+
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        }
+
+
+
+
         main = findViewById(R.id.main);
         imageView = (ImageView) findViewById(R.id.imageView);
         textView = (TextView) findViewById(R.id.textView);
+
+        pid = getIntent().getStringExtra("pid");
+        cid = getIntent().getStringExtra("center_map");
+
+
+
+        String[] separated = cid.split(",");
+
+        Double part_center1 = (Double)Double.parseDouble( separated[0]); // 004
+        Double part_center2 = (Double)Double.parseDouble(separated[1]);
+
+        center_x =  new LatLng(part_center1 ,part_center2);
+
+
+
+
+        Toast(pid);
 
 
 
@@ -151,10 +201,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-        FloatingActionButton search = (FloatingActionButton) findViewById(R.id.search);
-        FloatingActionButton center = (FloatingActionButton) findViewById(R.id.center);
+        ImageButton search = (ImageButton) findViewById(R.id.search);
+        ImageButton center = (ImageButton) findViewById(R.id.center);
 
-        FloatingActionButton share = (FloatingActionButton) findViewById(R.id.share);
+        ImageButton share = (ImageButton) findViewById(R.id.share);
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -340,7 +390,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
 
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(a,17));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center_x,18));
                 default_color();
                Toast("center clicked");
 
@@ -467,7 +517,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                          Double part01 = (Double)Double.parseDouble(finalOutputString.get(0)); // 004
                          Double part02 = (Double)Double.parseDouble(finalOutputString.get(1)); //
-                         a =  new LatLng(part01 ,part02);
+                         //a =  new LatLng(part01 ,part02);
 
 
                          if (databaseModelArrayList.get(i).getType().equals("road")){
@@ -583,7 +633,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         get_all_id();
 
 
-        Call<Data> call = RetrofitClient.getmInstance().getApi().get_all();
+        Call<Data> call = RetrofitClient.getmInstance().getApi().get_all(pid);
 
         call.enqueue(new Callback<Data>() {
             @Override
@@ -593,42 +643,44 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 DatabaseModel databaseModel = new DatabaseModel();
                 final List<Datum> data1 = data.getData();
 
+               if (data1 != null) {
+                   for (int i = 0; i < data1.size(); i++) {
+                       // Log.e("size",data1.get(i).getPoints().size()+"");
 
-                for (int i = 0; i<data1.size(); i++){
-                   // Log.e("size",data1.get(i).getPoints().size()+"");
-
-                    databaseModel.setPlot_no(data1.get(i).getPlotNo());
-                    databaseModel.setPlot_status(data1.get(i).getPlotStatus());
-                    databaseModel.setType(data1.get(i).getStatus());
-                    databaseModel.setSize(data1.get(i).getSize());
-                    databaseModel.setFacing(data1.get(i).getFacing());
-
-
-                    ArrayList<String> p = new ArrayList<>();
-                    for (int j = 0;j<data1.get(i).getPoints().size();j++){
-                        //Log.e("size",.getClass().getName());
-                        String s = data1.get(i).getPoints().get(j);
-
-                        p.add(s);
+                       databaseModel.setPlot_no(data1.get(i).getPlotNo());
+                       databaseModel.setPlot_status(data1.get(i).getPlotStatus());
+                       databaseModel.setType(data1.get(i).getStatus());
+                       databaseModel.setSize(data1.get(i).getSize());
+                       databaseModel.setFacing(data1.get(i).getFacing());
 
 
-                    }
+                       ArrayList<String> p = new ArrayList<>();
+                       for (int j = 0; j < data1.get(i).getPoints().size(); j++) {
+                           //Log.e("size",.getClass().getName());
+                           String s = data1.get(i).getPoints().get(j);
 
-                    Gson gson = new Gson();
+                           p.add(s);
 
-                    String inputString= gson.toJson(p);
 
-                    if (!data_id.contains(data1.get(i).getId())){
-                        databaseModel.setPoints(p.toString());
+                       }
 
-                        if(db.insertData(databaseModel)){
-                             Log.e("insering data","data inserted");
-                            }
-                    }else {
-                        Log.e("contains","data inserted");
-                    }
+                       Gson gson = new Gson();
 
-                }
+                       String inputString = gson.toJson(p);
+
+                       if (!data_id.contains(data1.get(i).getId())) {
+                           databaseModel.setPoints(p.toString());
+
+                           if (db.insertData(databaseModel)) {
+                               Log.e("insering data", "data inserted");
+                           }
+                       } else {
+                           Log.e("contains", "not inserted");
+                       }
+
+                   }
+
+               }
 
             getAllNews();
             }
@@ -649,8 +701,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
 
         Polygon polygon = null;
-        mMap.setMapType(mMap.MAP_TYPE_SATELLITE);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setMapType(mMap.MAP_TYPE_TERRAIN);
+       // mMap.getUiSettings().setZoomControlsEnabled(true);
 
 
 
@@ -697,10 +749,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-
-
-                    Toast.makeText(getApplicationContext(),click.get(polygon.getId()) , Toast.LENGTH_LONG).show();
-
                 String plot_id = click.get(polygon.getId());
 
                 String facing_text = all_data.get(plot_id).getFacing();
@@ -725,7 +773,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(a,17));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center_x,18));
 
        for (int c = 0;c<centerPositions.size();c++){
 
@@ -851,6 +899,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public void snapShot(){
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center_x,18));
         GoogleMap.SnapshotReadyCallback callback=new GoogleMap.SnapshotReadyCallback () {
             Bitmap bitmap;
             @Override
@@ -866,13 +915,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     Uri uri = getImageUri(getApplicationContext(),bitmap);
 
+                    String link = "http://maps.google.com/maps?q=loc:" + center_x.latitude +","+ center_x.longitude;
+
 
 //            Toast.makeText(getApplicationContext(),b.toString(),Toast.LENGTH_SHORT).show();
 
 
                     Intent shareIntent = new Intent();
                     shareIntent.setAction(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT,"hello this is the screenshot" );
+                    shareIntent.putExtra(Intent.EXTRA_TEXT,"click the link: \n "+link );
                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                     shareIntent.setType("image/*");
                     startActivity(Intent.createChooser(shareIntent, "Share image via:"));
@@ -944,6 +995,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             EasyPermissions.requestPermissions(this, "We need permissions because this and that",
                     123, perms);
         }
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            logout();
+            Toast("logout");
+            return true;
+        }
+
+        if (item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void logout(){
+        SharedPrefManager.get_mInstance(getApplicationContext()).clear();
+        Intent intent = new Intent(MapsActivity.this,Login.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
 

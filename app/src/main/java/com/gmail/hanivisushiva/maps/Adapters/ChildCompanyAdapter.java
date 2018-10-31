@@ -10,17 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.gmail.hanivisushiva.maps.ChildCompany;
 import com.gmail.hanivisushiva.maps.Models.Database.DChildCompany;
+import com.gmail.hanivisushiva.maps.DProject;
 import com.gmail.hanivisushiva.maps.R;
+import com.gmail.hanivisushiva.maps.Storage.SharedPrefManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChildCompanyAdapter extends RecyclerView.Adapter<ChildCompanyAdapter.CompanyRecyclerViewHolderr>{
 
     private Context context;
     private List<DChildCompany> list;
-    String m_company_id;
+    String m_company_id,total_projects;
+    ArrayList ans_array = new ArrayList();
 
     public ChildCompanyAdapter(Context context, List<DChildCompany> list) {
         this.context = context;
@@ -39,17 +42,27 @@ public class ChildCompanyAdapter extends RecyclerView.Adapter<ChildCompanyAdapte
     @Override
     public void onBindViewHolder(@NonNull final CompanyRecyclerViewHolderr companyRecyclerViewHolderr, int i) {
 
-        companyRecyclerViewHolderr.title.setText(list.get(i).getCDCOMPANY());
-        companyRecyclerViewHolderr.des.setText(list.get(i).getCDESCRIPTION());
+        companyRecyclerViewHolderr.title.setText(list.get(i).getNAME());
+        m_company_id= list.get(i).getCID();
 
 
+        total_projects = SharedPrefManager.get_mInstance(context).getProjects();
+        String foo = total_projects;
+        String[] split = foo.split(",");
+        for (int k = 0; k < split.length; k++) {
+
+            ans_array.add(split[k]);
+
+        }
+        companyRecyclerViewHolderr.left.setVisibility(View.GONE);
+        companyRecyclerViewHolderr.right.setVisibility(View.GONE);
 
 
-
+        companyRecyclerViewHolderr.center.setText("Total Projects "+ans_array.size()+"");
         companyRecyclerViewHolderr.company_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,ChildCompany.class);
+                Intent intent = new Intent(context,DProject.class);
                 intent.putExtra("company_id",m_company_id);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
@@ -64,13 +77,15 @@ public class ChildCompanyAdapter extends RecyclerView.Adapter<ChildCompanyAdapte
     }
 
     public class CompanyRecyclerViewHolderr extends RecyclerView.ViewHolder {
-        TextView title,des;
+        TextView title,center,left,right;
         CardView company_card;
         public CompanyRecyclerViewHolderr(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.title);
-            des = itemView.findViewById(R.id.des);
+            center = itemView.findViewById(R.id.center);
+            left = itemView.findViewById(R.id.left);
+            right = itemView.findViewById(R.id.right);
             company_card = itemView.findViewById(R.id.company_card);
 
         }

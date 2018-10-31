@@ -4,6 +4,7 @@ package com.gmail.hanivisushiva.maps;
 
 import com.gmail.hanivisushiva.maps.Models.Data;
 import com.gmail.hanivisushiva.maps.Models.Login.SignIn;
+import com.gmail.hanivisushiva.maps.Models.Project.Project;
 import com.gmail.hanivisushiva.maps.Models.dCompany.DCompany;
 
 import retrofit2.Call;
@@ -16,8 +17,13 @@ import retrofit2.http.POST;
 public interface Api {
 
 
-    @GET("plots.php")
-    Call<Data> get_all();
+    //@GET("plots.php")
+    //Call<Data> get_all();
+    @FormUrlEncoded
+    @POST("plots.php")
+    Call<Data> get_all(
+            @Field("id") String id
+    );
 
     @FormUrlEncoded
     @POST("login.php")
@@ -32,6 +38,13 @@ public interface Api {
     @POST("dcompany.php")
     Call<DCompany> get_Child(
             @Field("id") String id
+    );
+
+    @FormUrlEncoded
+    @POST("project.php")
+    Call<Project> get_projects(
+            @Field("did") String did,
+            @Field("pid") String pid
     );
 
 

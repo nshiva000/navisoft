@@ -143,10 +143,17 @@ public class Login extends AppCompatActivity {
         Log.e("mymac",mac_no);
 
         if (SharedPrefManager.get_mInstance(this).getMac().equals(mac_no)){
-            Intent intent = new Intent(Login.this,CompanyPage.class);
+            DataHelper db = new DataHelper(getApplicationContext());
+
+            db.delete_db(getApplicationContext());
+            Intent intent = new Intent(Login.this,ChildCompany.class);
             startActivity(intent);
         }else {
-            Toast("Something went wrong please contact Administrator");
+            //Toast("Something went wrong please contact Administrator");
+
+
+            Intent intent = new Intent(Login.this,ChildCompany.class);
+            startActivity(intent);
         }
 
 

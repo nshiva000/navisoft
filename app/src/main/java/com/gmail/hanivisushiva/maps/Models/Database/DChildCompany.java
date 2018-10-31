@@ -3,27 +3,36 @@ package com.gmail.hanivisushiva.maps.Models.Database;
 public class DChildCompany {
 
 
-    private  String CID;
-    private  String NAME;
-    private  String CDESCRIPTION;
-    private  String CLOGO;
-    private  String CLEVEL;
-    private  String CDCOMPANY;
-    private  String CTHEME;
-    private  String CSTATUS;
-    private  String CDATE;
+    private String CID;
+    private String NAME;
+    private String CDESCRIPTION;
+    private String CLOGO;
+    private String CTHEME;
+    private String CSTATUS;
+    private String CDATE;
 
 
-    public DChildCompany(String CID, String NAME, String CDESCRIPTION, String CLOGO, String CLEVEL, String CDCOMPANY, String CTHEME, String CSTATUS, String CDATE) {
+    public DChildCompany(String CID, String NAME, String CDESCRIPTION, String CLOGO, String CTHEME, String CSTATUS, String CDATE) {
         this.CID = CID;
         this.NAME = NAME;
         this.CDESCRIPTION = CDESCRIPTION;
         this.CLOGO = CLOGO;
-        this.CLEVEL = CLEVEL;
-        this.CDCOMPANY = CDCOMPANY;
         this.CTHEME = CTHEME;
         this.CSTATUS = CSTATUS;
         this.CDATE = CDATE;
+    }
+
+    @Override
+    public String toString() {
+        return "DChildCompany{" +
+                "CID='" + CID + '\'' +
+                ", NAME='" + NAME + '\'' +
+                ", CDESCRIPTION='" + CDESCRIPTION + '\'' +
+                ", CLOGO='" + CLOGO + '\'' +
+                ", CTHEME='" + CTHEME + '\'' +
+                ", CSTATUS='" + CSTATUS + '\'' +
+                ", CDATE='" + CDATE + '\'' +
+                '}';
     }
 
     public String getCID() {
@@ -40,14 +49,6 @@ public class DChildCompany {
 
     public String getCLOGO() {
         return CLOGO;
-    }
-
-    public String getCLEVEL() {
-        return CLEVEL;
-    }
-
-    public String getCDCOMPANY() {
-        return CDCOMPANY;
     }
 
     public String getCTHEME() {
@@ -76,14 +77,6 @@ public class DChildCompany {
 
     public void setCLOGO(String CLOGO) {
         this.CLOGO = CLOGO;
-    }
-
-    public void setCLEVEL(String CLEVEL) {
-        this.CLEVEL = CLEVEL;
-    }
-
-    public void setCDCOMPANY(String CDCOMPANY) {
-        this.CDCOMPANY = CDCOMPANY;
     }
 
     public void setCTHEME(String CTHEME) {

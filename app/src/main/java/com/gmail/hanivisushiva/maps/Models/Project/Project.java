@@ -1,5 +1,6 @@
 package com.gmail.hanivisushiva.maps.Models.Project;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,9 +9,9 @@ public class Project {
     @SerializedName("status")
     @Expose
     private Boolean status;
-    @SerializedName("data")
+    @SerializedName("projects_data")
     @Expose
-    private Data data;
+    private List<ProjectsDatum> projectsData = null;
     @SerializedName("message")
     @Expose
     private String message;
@@ -23,12 +24,12 @@ public class Project {
         this.status = status;
     }
 
-    public Data getData() {
-        return data;
+    public List<ProjectsDatum> getProjectsData() {
+        return projectsData;
     }
 
-    public void setData(Data data) {
-        this.data = data;
+    public void setProjectsData(List<ProjectsDatum> projectsData) {
+        this.projectsData = projectsData;
     }
 
     public String getMessage() {

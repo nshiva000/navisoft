@@ -4,50 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
+    android:background="@drawable/bg"
     tools:context=".Login">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
+
+        android:gravity="center"
         android:padding="20dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Login"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:layout_margin="30dp"
-            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:paddingTop="20dp"
+            android:src="@drawable/logo1"/>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="140dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="30dp"
+            android:src="@drawable/logo2"/>
+
 
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="15dp"
-        android:hint="Email"/>
+        android:layout_marginBottom="25dp"
+        android:hint="Email"
+        android:paddingStart="10dp"
+        android:background="#fff"
+        />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:inputType="textPassword"
-        android:layout_marginBottom="15dp"
-        android:hint="Password"/>
+        android:layout_marginBottom="25dp"
+        android:paddingStart="10dp"
+        android:hint="Password"
+        android:background="#fff"
+         />
 
     <Button
         android:id="@+id/login_btn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
+        android:gravity="center"
         android:layout_marginBottom="15dp"
-        android:text="Login"/>
+        android:textColor="#000"
+        android:hint="Login"
+         />
 
     </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>
