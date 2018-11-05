@@ -73,58 +73,15 @@ public class ChildCompany extends AppCompatActivity {
 
 
 
-    get_id();
-
-     getData();
-
    get_all_company_data();
 
-    }
-
-
-
-
-
-    private void getData(){
-
-        Call<DCompany> dCompanyCall = RetrofitClient.getmInstance().getApi().get_Child(mCompany_id);
-
-        dCompanyCall.enqueue(new Callback<DCompany>() {
-            @Override
-            public void onResponse(Call<DCompany> call, Response<DCompany> response) {
-                DCompany body = response.body();
-
-
-
-                for (int i = 0; i < body.getDData().size(); i++){
-
-                    if (!data_id.contains(body.getDData().get(i).getDid())){
-                        if (db.insertChildData(body.getDData().get(i))){
-                            Log.e("insering data","data inserted"+body.getDData().get(i).getDname());
-
-                        }
-                    }else {
-                        Log.e("insering data","data already contains");
-                    }
-                }
-
-
-
-
-
-                get_all_company_data();
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call<DCompany> call, Throwable t) {
-              Log.e("childCompany",t.getMessage());
-            }
-        });
 
     }
+
+
+
+
+
 
 
 
@@ -175,28 +132,6 @@ public class ChildCompany extends AppCompatActivity {
 
 
 
-
-
-    private void get_id() {
-
-        Cursor cursora = db.getAllChildData();
-        if (cursora.getCount() > 0) {
-            cursora.moveToFirst();
-            do {
-
-                String s = cursora.getString(1);
-                data_id.add(s);
-                Log.e("child_data_id",s);
-
-            } while (cursora.moveToNext());
-
-
-            Log.e("child_data_id",data_id.toString());
-
-            Log.e("child_data_id",data_id.size()+"");
-        }
-
-    }
 
 
 

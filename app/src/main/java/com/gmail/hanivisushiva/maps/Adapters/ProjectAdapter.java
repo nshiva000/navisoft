@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,17 +32,18 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     @Override
     public ProjectViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.company_card,viewGroup,false);
-        final ProjectAdapter.ProjectViewHolder mViewHolder = new ProjectAdapter.ProjectViewHolder(view);
+        final ProjectViewHolder mViewHolder = new ProjectViewHolder(view);
         return mViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
+
         final String p_center = project.get(i).getPCENTER();
-        projectViewHolder.left.setText("Available "+project.get(i).getT_AVAILABLE());
-        projectViewHolder.center.setText("Sold "+project.get(i).getT_PLOT_SOLD());
-        projectViewHolder.right.setText("Booked"+project.get(i).getT_PLOTS());
-        projectViewHolder.title.setText("project"+p_center);
+        projectViewHolder.left.setText(project.get(i).getT_AVAILABLE());
+        projectViewHolder.center.setText(project.get(i).getT_PLOT_SOLD());
+        projectViewHolder.right.setText(project.get(i).getT_PLOT_AREA());
+        projectViewHolder.title.setText(project.get(i).getNAME());
 
         final String pid = project.get(i).getPID();
 
@@ -54,7 +56,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
                 Intent intent = new Intent(context,MapsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("pid",pid);
-               intent.putExtra("center_map",p_center);
+                intent.putExtra("center_map",p_center);
 
                 context.startActivity(intent);
             }

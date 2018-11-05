@@ -21,9 +21,6 @@ import com.gmail.hanivisushiva.maps.Storage.SharedPrefManager;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DProject extends AppCompatActivity {
 
@@ -76,70 +73,10 @@ public class DProject extends AppCompatActivity {
         child_company_id = getIntent().getStringExtra("company_id");
         project_id = SharedPrefManager.get_mInstance(getApplicationContext()).getProjects();
 
-        get_id();
-
-        Log.e("data_id",data_id.toString());
-       getData();
-
       get_all_company_data();
 
     }
 
-
-    private void getData(){
-
-        Log.e("data","xxxxxdata already contains pr");
-        Call<Project> projectCall = RetrofitClient.getmInstance().getApi().get_projects(child_company_id,project_id);
-
-        projectCall.enqueue(new Callback<Project>() {
-            @Override
-            public void onResponse(Call<Project> call, Response<Project> response) {
-                Project project = response.body();
-
-
-
-
-                if (project.getStatus()){
-
-
-                    for (int i = 0; i < project.getProjectsData().size(); i++) {
-
-
-                        if (!data_id.contains(project.getProjectsData().get(i).getPid())) {
-                            if (db.insertProject(project.getProjectsData().get(i))) {
-
-
-                                Log.e("insering data", "project inserted");
-
-
-                            }
-
-                        }else {
-                            Log.e("child_company_id","already contains project");
-                        }
-
-                    }
-
-                }else {
-                    Log.e("something","error");
-                }
-
-
-
-
-            get_all_company_data();
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call<Project> call, Throwable t) {
-                Log.e("cccProject",t.getMessage());
-                get_all_company_data();
-            }
-        });
-    }
 
 
 
@@ -149,7 +86,7 @@ public class DProject extends AppCompatActivity {
         DatabaseProject databaseProject;
         project_list.clear();
 
-        Cursor cursora = db.getProjectData();
+        Cursor cursora = db.getOnlyProjectData(child_company_id);
         if (cursora.getCount() > 0) {
             cursora.moveToFirst();
             do {
@@ -199,22 +136,7 @@ public class DProject extends AppCompatActivity {
 
 
 
-    private void get_id() {
 
-        Cursor cursora = db.getProjectData();
-        if (cursora.getCount() > 0) {
-            cursora.moveToFirst();
-            do {
-
-                String s = cursora.getString(1);
-                data_id.add(s);
-                Log.e("child_data_id",s);
-
-            } while (cursora.moveToNext());
-
-        }
-
-    }
 
 
     @Override

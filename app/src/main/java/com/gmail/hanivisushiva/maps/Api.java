@@ -20,9 +20,9 @@ public interface Api {
     //@GET("plots.php")
     //Call<Data> get_all();
     @FormUrlEncoded
-    @POST("plots.php")
+    @POST("allplots.php")
     Call<Data> get_all(
-            @Field("id") String id
+            @Field("pid") String id
     );
 
     @FormUrlEncoded
@@ -44,6 +44,13 @@ public interface Api {
     @POST("project.php")
     Call<Project> get_projects(
             @Field("did") String did,
+            @Field("pid") String pid
+    );
+
+
+    @FormUrlEncoded
+    @POST("allprojects.php")
+    Call<Project> get_all_projects(
             @Field("pid") String pid
     );
 

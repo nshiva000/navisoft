@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.gmail.hanivisushiva.maps.Models.DatabaseModel;
+import com.gmail.hanivisushiva.maps.Models.Datum;
 import com.gmail.hanivisushiva.maps.Models.Project.ProjectsDatum;
 import com.gmail.hanivisushiva.maps.Models.dCompany.DDatum;
 
@@ -16,13 +17,11 @@ public class DataHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "navi_soft";
     private static final String TABLE_NAME = "plot_table";
-    public static final String COL_1 = "ID";
-    private static final String COL_2 = "PLOT_NO";
-    private static final String COL_3 = "TYPE";
-    private static final String COL_4 = "PLOT_STATUS";
-    private static final String COL_5 = "SIZE";
-    private static final String COL_6 = "FACING";
-    private static final String COL_7 = "POINTS";
+
+
+
+
+
 
 
 
@@ -53,13 +52,30 @@ public class DataHelper extends SQLiteOpenHelper {
     private static final String P_PSTATUS = "PSTATUS";
     private static final String P_PCOMPANY = "PCOMPANY";
     private static final String P_PLOTS = "PLOTS";
-   private static final String P_PLOTTED_AREA = "T_ALLOTED";
+    private static final String P_PLOTTED_AREA = "T_ALLOTED";
     private static final String P_DATE = "DATE";
     private static final String P_PROJECT_DES = "PROJECT_DES";
     private static final String P_T_PLOTS = "T_PLOTS";
     private static final String P_T_AVAILABLE = "T_AVAILABLE";
     private static final String P_T_PLOT_AREA = "T_PLOT_AREA";
     private static final String P_T_PLOT_SOLD = "T_PLOT_SOLD";
+
+    public static final String ID = "ID";
+    private static final String PID = "PID";
+    private static final String PLOT_NO = "PLOT_NO";
+    private static final String PLOT_STATUS = "PLOT_STATUS";
+    private static final String SIZE = "SIZE";
+    private static final String FACING = "FACING";
+    private static final String STATUS = "STATUS";
+    private static final String DIM_A = "DIM_A";
+    private static final String DIM_B = "DIM_B";
+    private static final String DIM_C = "DIM_C";
+    private static final String DIM_D = "DIM_D";
+    private static final String CUSTOMER_NAME = "CUSTOMER_NAME";
+    private static final String CUSTOMER_DESIG = "CUSTOMER_DESIG";
+    private static final String SOLD_TEAM = "SOLD_TEAM";
+    private static final String BOOKED_TEAM = "BOOKED_TEAM";
+    private static final String POINTS = "POINTS";
 
 
 
@@ -75,7 +91,7 @@ public class DataHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
 
-        db.execSQL("create table " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,PLOT_NO TEXT, TYPE TEXT, PLOT_STATUS TEXT, SIZE TEXT, FACING TEXT,POINTS TEXT)");
+        db.execSQL("create table " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,PID TEXT,PLOT_NO TEXT, PLOT_STATUS TEXT, SIZE TEXT, FACING TEXT,STATUS TEXT,DIM_A TEXT,DIM_B TEXT,DIM_C TEXT,DIM_D TEXT,CUSTOMER_NAME TEXT,CUSTOMER_DESIG TEXT,SOLD_TEAM TEXT,BOOKED_TEAM TEXT,POINTS TEXT)");
 
         db.execSQL("create table " + TABLE_NAME_D_COMPANY + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,CID TEXT, NAME TEXT, CDESCRIPTION TEXT, CLOGO TEXT, CTHEME TEXT, CSTATUS TEXT,CDATE TEXT)");
 
@@ -91,7 +107,7 @@ public class DataHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean insertData(DatabaseModel databaseModel){
+  /*  public boolean insertData(DatabaseModel databaseModel){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2,databaseModel.getPlot_no());
@@ -100,12 +116,46 @@ public class DataHelper extends SQLiteOpenHelper {
         contentValues.put(COL_5,databaseModel.getSize());
         contentValues.put(COL_6,databaseModel.getFacing());
         contentValues.put(COL_7,databaseModel.getPoints());
+        contentValues.put(COL_7,databaseModel.getPoints());
 
         Long success = db.insert(TABLE_NAME, null,contentValues);
 
         return success != -1;
 
     }
+    */
+
+
+
+
+
+
+
+  public boolean insertedData(Datum datum){
+      SQLiteDatabase db = this.getWritableDatabase();
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(PID,datum.getPid());
+      contentValues.put(PLOT_NO,datum.getPlotNo());
+      contentValues.put(PLOT_STATUS,datum.getPlotStatus());
+      contentValues.put(SIZE,datum.getSize());
+      contentValues.put(FACING,datum.getFacing());
+      contentValues.put(STATUS,datum.getStatus());
+      contentValues.put(DIM_A,datum.getDimension1());
+      contentValues.put(DIM_B,datum.getDimension2());
+      contentValues.put(DIM_C,datum.getDimension3());
+      contentValues.put(DIM_D,datum.getDimension4());
+      contentValues.put(CUSTOMER_NAME,"datum.getCustomername()");
+      contentValues.put(CUSTOMER_DESIG,datum.getCustomerdesi());
+      contentValues.put(SOLD_TEAM,datum.getSoldteam());
+      contentValues.put(BOOKED_TEAM,datum.getBookedteam());
+      contentValues.put(POINTS,datum.getString_points());
+
+      Long success = db.insert(TABLE_NAME, null,contentValues);
+
+      return success != -1;
+
+
+  }
 
 
 
@@ -173,6 +223,14 @@ public class DataHelper extends SQLiteOpenHelper {
     }
 
 
+    public Cursor getAllPlots(String s){
+        SQLiteDatabase db =  this.getWritableDatabase();
+
+        return db.rawQuery("select * from "+TABLE_NAME+" WHERE "+P_ID+" = '"+s+"'",null);
+
+    }
+
+
 
 
 
@@ -192,23 +250,47 @@ public class DataHelper extends SQLiteOpenHelper {
     }
 
 
+    public Cursor getOnlyProjectData(String s){
+        SQLiteDatabase db =  this.getWritableDatabase();
+
+        return db.rawQuery("select * from "+TABLE_NAME_PROJECT+" WHERE "+P_PCOMPANY+" = '"+s+"'",null);
+
+    }
+
+
     public Cursor get_by_facing(String facing,String status){
         SQLiteDatabase db =  this.getWritableDatabase();
 
-        return db.rawQuery("select * from "+TABLE_NAME+" WHERE "+COL_4+" = '"+status+"'and "+COL_6+"='"+facing+"'" ,null);
+        return db.rawQuery("select * from "+TABLE_NAME+" WHERE "+PLOT_STATUS+" = '"+status+"'and "+FACING+"='"+facing+"'" ,null);
 
     }
 
     public int deletePost(String id){
         SQLiteDatabase db =this.getWritableDatabase();
 
-        return db.delete(TABLE_NAME,COL_2+"="+id, null);
+        return db.delete(TABLE_NAME,PLOT_NO+"="+id, null);
     }
 
 
     public void delete_db(Context context){
         context.deleteDatabase(DATABASE_NAME);
     }
+
+    public void delete_child(){
+        SQLiteDatabase db =this.getWritableDatabase();
+        db.delete(TABLE_NAME_D_COMPANY, null, null);
+    }
+
+    public void delete_project(){
+        SQLiteDatabase db =this.getWritableDatabase();
+        db.delete(TABLE_NAME_PROJECT, null, null);
+    }
+
+    public void delete_plots(){
+        SQLiteDatabase db =this.getWritableDatabase();
+        db.delete(TABLE_NAME, null, null);
+    }
+
 
 
 

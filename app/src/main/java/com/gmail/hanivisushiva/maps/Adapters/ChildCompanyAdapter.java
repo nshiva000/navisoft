@@ -56,14 +56,17 @@ public class ChildCompanyAdapter extends RecyclerView.Adapter<ChildCompanyAdapte
         }
         companyRecyclerViewHolderr.left.setVisibility(View.GONE);
         companyRecyclerViewHolderr.right.setVisibility(View.GONE);
+        companyRecyclerViewHolderr.r_text.setVisibility(View.GONE);
+        companyRecyclerViewHolderr.l_text.setVisibility(View.GONE);
+        companyRecyclerViewHolderr.c_text.setText("Total Projects : ");
 
 
-        companyRecyclerViewHolderr.center.setText("Total Projects "+ans_array.size()+"");
+        companyRecyclerViewHolderr.center.setText(ans_array.size()+"");
         companyRecyclerViewHolderr.company_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context,DProject.class);
-                intent.putExtra("company_id",m_company_id);
+                intent.putExtra("company_id","1");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -77,11 +80,13 @@ public class ChildCompanyAdapter extends RecyclerView.Adapter<ChildCompanyAdapte
     }
 
     public class CompanyRecyclerViewHolderr extends RecyclerView.ViewHolder {
-        TextView title,center,left,right;
+        TextView title,center,left,right,l_text,r_text,c_text;
         CardView company_card;
         public CompanyRecyclerViewHolderr(@NonNull View itemView) {
             super(itemView);
-
+            l_text = itemView.findViewById(R.id.l_text);
+            c_text = itemView.findViewById(R.id.c_text);
+            r_text = itemView.findViewById(R.id.r_text);
             title = itemView.findViewById(R.id.title);
             center = itemView.findViewById(R.id.center);
             left = itemView.findViewById(R.id.left);

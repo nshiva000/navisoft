@@ -4,27 +4,91 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/plot_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_margin="5dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Plot No : "/>
+
+    <TextView
+        android:id="@+id/plot_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="TextView" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_margin="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Plot Size: "/>
 
     <TextView
         android:id="@+id/size"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_margin="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Plot Facing : "/>
 
     <TextView
         android:id="@+id/facing"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/book_button"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Booknow" />
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="15dp">
+
+        <Button
+            android:id="@+id/book_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hold Plot" />
+
+        <Button
+            android:id="@+id/hold_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Book Now" />
+
+    </LinearLayout>
+
+
 </LinearLayout>

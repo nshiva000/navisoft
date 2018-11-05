@@ -91,7 +91,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     ArrayList<PolygonOptions> arrayList = new ArrayList<>();
     ArrayList<DatabaseModel> databaseModelArrayList = new ArrayList<>();
-    ArrayList<String> data_id = new ArrayList<>();
 
 
     ArrayList<String> sold_plots = new ArrayList<>();
@@ -101,13 +100,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     ArrayList<String> facing_plots_no = new ArrayList<>();
-    ArrayList<String> north_west = new ArrayList<>();
-    ArrayList<String> south_east = new ArrayList<>();
-    ArrayList<String> south_west = new ArrayList<>();
-    ArrayList<String> north = new ArrayList<>();
-    ArrayList<String> west = new ArrayList<>();
-    ArrayList<String> east = new ArrayList<>();
-    ArrayList<String> south = new ArrayList<>();
+
 
 
     ArrayList<LatLng> centerPositions = new ArrayList<>();
@@ -194,7 +187,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         db = new DataHelper(getApplicationContext());
-        get_spots();
+        //get_spots();
+
+        getAllNews();
+        //get_all_plots();
 
 
 
@@ -462,6 +458,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+
+
     public void getAllNews() {
         DatabaseModel data;
         databaseModelArrayList.clear();
@@ -471,7 +469,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         arrayList.clear();
         plot_id.clear();
 
-                 Cursor cursora = db.getAllData();
+
+
+                 Cursor cursora = db.getAllPlots(pid);
                  if (cursora.getCount() > 0) {
                      cursora.moveToFirst();
                      do {
@@ -482,13 +482,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                  cursora.getString(3),
                                  cursora.getString(4),
                                  cursora.getString(5),
-                                 cursora.getString(6)
+                                 cursora.getString(6),
+                                         cursora.getString(7),
+                                         cursora.getString(8),
+                                         cursora.getString(9),
+                                         cursora.getString(10),
+                                         cursora.getString(11),
+                                         cursora.getString(12),
+                                         cursora.getString(13),
+                                         cursora.getString(14),
+                                         cursora.getString(15)
+
                          );
 
 
                          databaseModelArrayList.add(data);
 
-                         all_data.put(cursora.getString(1),data);
+                         all_data.put(cursora.getString(2),data);
 
 
 
@@ -496,6 +506,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                      for (int i=0;i<databaseModelArrayList.size();i++){
                          ArrayList<LatLng> latLngs = new ArrayList<>();
+
+
+                         Log.e("ss",databaseModelArrayList.size()+"aa");
 
                          PolygonOptions polygonOptions = new PolygonOptions().clickable(true);
 
@@ -520,7 +533,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                          //a =  new LatLng(part01 ,part02);
 
 
-                         if (databaseModelArrayList.get(i).getType().equals("road")){
+                         if (databaseModelArrayList.get(i).getStatus().equals("road")){
                              center_hash.put("road",getCenterOfPolygon(latLngs));
                              polygonOptions.strokeWidth(2).fillColor(Color.BLACK).geodesic(true);
 
@@ -529,6 +542,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                              center_hash.put(databaseModelArrayList.get(i).getPlot_no(),getCenterOfPolygon(latLngs));
                              centerPositions.add(getCenterOfPolygon(latLngs));
                              plot_no.add(databaseModelArrayList.get(i).getPlot_no());
+
+                            // databaseModelArrayList.get(i).setPlot_status("Sold");
 
 
 
@@ -553,7 +568,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                          }
 
-                         Log.e("type",databaseModelArrayList.get(i).getType());
+                         Log.e("type",databaseModelArrayList.get(i).getStatus());
 
                          if (databaseModelArrayList.get(i).getPlot_no() == null){
                              plot_id.add("its road");
@@ -577,28 +592,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
                  }
-             }
-
-
-
-    private void get_all_id() {
-
-        Cursor cursora = db.getAllData();
-        if (cursora.getCount() > 0) {
-            cursora.moveToFirst();
-            do {
-                String s = cursora.getString(0);
-
-
-                data_id.add(s);
-
-
-            } while (cursora.moveToNext());
-
-
-        }
-
     }
+
+
+
+
+
 
 
 
@@ -628,72 +627,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private void get_spots() {
-
-        get_all_id();
-
-
-        Call<Data> call = RetrofitClient.getmInstance().getApi().get_all(pid);
-
-        call.enqueue(new Callback<Data>() {
-            @Override
-            public void onResponse(Call<Data> call, Response<Data> response) {
-                Data data = response.body();
-
-                DatabaseModel databaseModel = new DatabaseModel();
-                final List<Datum> data1 = data.getData();
-
-               if (data1 != null) {
-                   for (int i = 0; i < data1.size(); i++) {
-                       // Log.e("size",data1.get(i).getPoints().size()+"");
-
-                       databaseModel.setPlot_no(data1.get(i).getPlotNo());
-                       databaseModel.setPlot_status(data1.get(i).getPlotStatus());
-                       databaseModel.setType(data1.get(i).getStatus());
-                       databaseModel.setSize(data1.get(i).getSize());
-                       databaseModel.setFacing(data1.get(i).getFacing());
-
-
-                       ArrayList<String> p = new ArrayList<>();
-                       for (int j = 0; j < data1.get(i).getPoints().size(); j++) {
-                           //Log.e("size",.getClass().getName());
-                           String s = data1.get(i).getPoints().get(j);
-
-                           p.add(s);
-
-
-                       }
-
-                       Gson gson = new Gson();
-
-                       String inputString = gson.toJson(p);
-
-                       if (!data_id.contains(data1.get(i).getId())) {
-                           databaseModel.setPoints(p.toString());
-
-                           if (db.insertData(databaseModel)) {
-                               Log.e("insering data", "data inserted");
-                           }
-                       } else {
-                           Log.e("contains", "not inserted");
-                       }
-
-                   }
-
-               }
-
-            getAllNews();
-            }
-
-            @Override
-            public void onFailure(Call<Data> call, Throwable t) {
-                Log.e("server failure",t.getMessage());
-                getAllNews();
-            }
-        });
-
-
-    }
 
 
     @Override
@@ -755,9 +688,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String size_text = all_data.get(plot_id).getSize();
                 String plot_no_text = all_data.get(plot_id).getPlot_no();
 
-                size.setText("feets : "+size_text);
-                plot_no.setText("plot no : "+plot_no_text);
-                facing.setText("facing : " +facing_text);
+                size.setText(size_text);
+                plot_no.setText(plot_no_text);
+                facing.setText(facing_text);
 
 
             }
