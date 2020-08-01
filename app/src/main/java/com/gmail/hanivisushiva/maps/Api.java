@@ -2,6 +2,7 @@ package com.gmail.hanivisushiva.maps;
 
 
 
+import com.gmail.hanivisushiva.maps.Models.Book.Book;
 import com.gmail.hanivisushiva.maps.Models.Data;
 import com.gmail.hanivisushiva.maps.Models.Login.SignIn;
 import com.gmail.hanivisushiva.maps.Models.Project.Project;
@@ -52,6 +53,14 @@ public interface Api {
     @POST("allprojects.php")
     Call<Project> get_all_projects(
             @Field("pid") String pid
+    );
+
+    @FormUrlEncoded
+    @POST("book.php")
+    Call<Book> book_plot(
+            @Field("position") String position,
+            @Field("pid") String pid,
+            @Field("plot_no") String plot_no
     );
 
 

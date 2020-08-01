@@ -42,6 +42,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gmail.hanivisushiva.maps.Models.Book.Book;
 import com.gmail.hanivisushiva.maps.Models.Data;
 import com.gmail.hanivisushiva.maps.Models.DatabaseModel;
 import com.gmail.hanivisushiva.maps.Models.Datum;
@@ -121,7 +122,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView textView;
     View main;
     ImageView imageView;
-    String pid,cid;
+    String pid,cid,position_user;
+
+
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,6 +165,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         pid = getIntent().getStringExtra("pid");
         cid = getIntent().getStringExtra("center_map");
+
+        position_user = SharedPrefManager.get_mInstance(getApplicationContext()).getPosition();
+
+        Toast(position_user);
 
 
 
@@ -660,7 +667,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
             public void onPolygonClick(Polygon polygon) {
-                TextView facing,plot_no,size;
+                final TextView facing,plot_no,size,plot_status;
+                Button book_now;
+
+
+                ArrayList<String> pos_arr = new ArrayList<>();
+
+                pos_arr.add("1");
+                pos_arr.add("2");
+                pos_arr.add("3");
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
@@ -669,6 +684,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 plot_no = dialogLayout.findViewById(R.id.plot_name);
                 facing = dialogLayout.findViewById(R.id.facing);
                 size = dialogLayout.findViewById(R.id.size);
+                plot_status = dialogLayout.findViewById(R.id.plot_status);
+                book_now = dialogLayout.findViewById(R.id.book_button);
 
 
 
@@ -680,17 +697,61 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                // Log.e("aaaa",all_data.get("15").getPlot_no());
                 Log.e("ppaa",click.get(polygon.getId()));
 
+                if (!pos_arr.contains(position_user)){
+                    book_now.setVisibility(View.GONE);
+                }
+
+
+
 
 
                 String plot_id = click.get(polygon.getId());
 
                 String facing_text = all_data.get(plot_id).getFacing();
                 String size_text = all_data.get(plot_id).getSize();
-                String plot_no_text = all_data.get(plot_id).getPlot_no();
+                final String plot_no_text = all_data.get(plot_id).getPlot_no();
+                String plot_status_text = all_data.get(plot_id).getPlot_status();
+
+
+                if (plot_status_text.toLowerCase().equals("booked") || plot_status_text.toLowerCase().equals("sold") ){
+                    book_now.setVisibility(View.GONE);
+                }
 
                 size.setText(size_text);
                 plot_no.setText(plot_no_text);
                 facing.setText(facing_text);
+                plot_status.setText(plot_status_text);
+
+                book_now.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Toast(position_user+"=="+pid+"=="+plot_no_text);
+
+                        Call<Book> book = RetrofitClient.getmInstance().getApi().book_plot(position_user,pid,plot_no_text);
+
+                        book.enqueue(new Callback<Book>() {
+                            @Override
+                            public void onResponse(Call<Book> call, Response<Book> response) {
+                                Book call_bool = response.body();
+
+                                if (call_bool.getStatus()){
+                                    Toast(call_bool.getMessage());
+                                }else{
+                                    Toast(call_bool.getMessage());
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<Book> call, Throwable t) {
+
+                                Toast("some thing error");
+
+                            }
+                        });
+                    }
+                });
 
 
             }
@@ -944,6 +1005,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             logout();
             Toast("logout");
             return true;
+        }else if (id == R.id.action_sync){
+            Sync_data();
+           // Toast("Synchronizing Data");
+            return true;
         }
 
         if (item.getItemId() == android.R.id.home){
@@ -959,6 +1024,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void logout(){
         SharedPrefManager.get_mInstance(getApplicationContext()).clear();
         Intent intent = new Intent(MapsActivity.this,Login.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+
+    private void Sync_data(){
+
+        Intent intent = new Intent(MapsActivity.this,Sync.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

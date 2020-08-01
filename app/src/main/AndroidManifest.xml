@@ -44,7 +44,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChildCompany" />
-        <activity android:name=".DProject"></activity>
+        <activity android:name=".DProject" />
+        <activity android:name=".Sync"></activity>
     </application>
 
 </manifest>

@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.gmail.hanivisushiva.maps.Adapters.ProjectAdapter;
 import com.gmail.hanivisushiva.maps.Models.Database.DChildCompany;
@@ -72,9 +73,15 @@ public class DProject extends AppCompatActivity {
 
         child_company_id = getIntent().getStringExtra("company_id");
         project_id = SharedPrefManager.get_mInstance(getApplicationContext()).getProjects();
+Toast(project_id);
+
 
       get_all_company_data();
 
+    }
+
+    private void Toast(String s){
+        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
     }
 
 
@@ -115,7 +122,12 @@ public class DProject extends AppCompatActivity {
                 Log.e("dddd",databaseProject.toString());
 
 
-                project_list.add(databaseProject);
+                if (project_id.contains(databaseProject.getPID())){
+                    project_list.add(databaseProject);
+                }
+
+
+
 
 
             } while (cursora.moveToNext());
@@ -150,6 +162,9 @@ public class DProject extends AppCompatActivity {
         if (id == R.id.action_settings) {
             logout();
             return true;
+        }else if (id == R.id.action_sync){
+            Sync_data();
+            return true;
         }
 
         if (item.getItemId() == android.R.id.home){
@@ -166,6 +181,14 @@ public class DProject extends AppCompatActivity {
     private void logout(){
         SharedPrefManager.get_mInstance(getApplicationContext()).clear();
         Intent intent = new Intent(DProject.this,Login.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+
+    private void Sync_data(){
+
+        Intent intent = new Intent(DProject.this,Sync.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

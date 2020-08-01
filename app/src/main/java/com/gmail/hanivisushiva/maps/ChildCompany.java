@@ -147,6 +147,10 @@ public class ChildCompany extends AppCompatActivity {
             logout();
             Toast("logout");
             return true;
+        }else if (id == R.id.action_sync){
+            Sync_data();
+            //Toast("Synchronizing Data");
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -156,6 +160,13 @@ public class ChildCompany extends AppCompatActivity {
     private void logout(){
         SharedPrefManager.get_mInstance(getApplicationContext()).clear();
         Intent intent = new Intent(ChildCompany.this,Login.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void Sync_data(){
+
+        Intent intent = new Intent(ChildCompany.this,Sync.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

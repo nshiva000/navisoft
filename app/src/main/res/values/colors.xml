@@ -8,5 +8,6 @@
     <color name="booked">#ea9f13</color>
     <color name="available">#78912b</color>
     <color name="btn">#075e71</color>
+    <color name="err_btn">#a6061f</color>
     <color name="white">#fff</color>
 </resources>

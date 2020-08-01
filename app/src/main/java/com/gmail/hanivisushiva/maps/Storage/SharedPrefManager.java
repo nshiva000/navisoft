@@ -110,6 +110,12 @@ public class SharedPrefManager {
 
     }
 
+    public String getPosition(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        return sharedPreferences.getString("position","");
+
+    }
+
 
   /*  public Login getUser(){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);

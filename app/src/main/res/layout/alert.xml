@@ -22,7 +22,7 @@
         android:id="@+id/plot_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="" />
 
 
     </LinearLayout>
@@ -44,7 +44,7 @@
         android:id="@+id/size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="" />
 
     </LinearLayout>
 
@@ -65,7 +65,27 @@
         android:id="@+id/facing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_margin="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Plot Status : "/>
+
+        <TextView
+            android:id="@+id/plot_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
     </LinearLayout>
 
 
@@ -78,12 +98,6 @@
 
         <Button
             android:id="@+id/book_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hold Plot" />
-
-        <Button
-            android:id="@+id/hold_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Book Now" />
